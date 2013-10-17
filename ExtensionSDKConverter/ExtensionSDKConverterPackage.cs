@@ -211,6 +211,8 @@ namespace MarkerMetro.ExtensionSDKConverter
                 try
                 {
                     project.Save(reference.ContainingProject.FullName);
+
+                    ShowInfo("The extension has been added to the folder you specified. You may be asked to reload your project, after which the path for the reference should be the same path you chose earlier");
                 }
                 catch (Exception exception)
                 {
@@ -218,7 +220,7 @@ namespace MarkerMetro.ExtensionSDKConverter
                 }
             }
 
-            dte.ExecuteCommand("Refresh");
+            
         }
 
         private void CopyDirectoryContents(string source, string destination)
