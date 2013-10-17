@@ -84,20 +84,13 @@ namespace MarkerMetro.ExtensionSDKConverter
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            // Show a Message Box to prove we were here
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            Guid clsid = Guid.Empty;
-            int result;
-
             var reference = GetSelectedReference();
             if (reference == null || reference.RefType != 4)
             {
                 return;
             }
 
-            string location = reference.Path;
-
-            ProjectCollection engine = Microsoft.Build.Evaluation.ProjectCollection.GlobalProjectCollection;
+            ProjectCollection engine = ProjectCollection.GlobalProjectCollection;
             Project project = engine.GetLoadedProjects(reference.ContainingProject.FullName).FirstOrDefault();
 
             if (project == null)
@@ -212,19 +205,30 @@ namespace MarkerMetro.ExtensionSDKConverter
                 {
                     project.Save(reference.ContainingProject.FullName);
 
-                    ShowInfo("The extension has been added to the folder you specified. You may be asked to reload your project, after which the path for the reference should be the same path you chose earlier");
+                    ShowInfo(
+                        "The extension has been added to the folder you specified. You may be asked to reload your project, after which the path for the reference should be the same path you chose earlier");
                 }
                 catch (Exception exception)
                 {
                     ShowError(string.Format("There was an error saving the project file: {0}", exception.Message));
                 }
             }
-
-            
+            else
+            {
+                ShowInfo("The extension has been added to the folder you specified. You may need to refresh solution explorer, after which the path for the reference should be the same path you chose earlier");
+            }
         }
 
         private void CopyDirectoryContents(string source, string destination)
         {
+            if (!source.EndsWith("\\"))
+            {
+                source = source + "\\";
+            }
+            if (!destination.EndsWith("\\"))
+            {
+                destination = destination + "\\";
+            }
             //Now Create all of the directories
             foreach (var dirPath in Directory.GetDirectories(source, "*",
                 SearchOption.AllDirectories))
@@ -278,7 +282,19 @@ namespace MarkerMetro.ExtensionSDKConverter
             if (menuCommand != null)
             {
                 var reference = GetSelectedReference();
-                menuCommand.Visible = reference != null && reference.RefType == 4;   
+                var isExtensionSdk = reference != null && reference.RefType == 4;
+                if (!isExtensionSdk)
+                {
+                    // Exit early if the reference is not an ExtensionSDK
+                    menuCommand.Visible = false;
+                    return;
+                }
+
+                var dte = (DTE)GetService(typeof(DTE));
+                var solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+
+                // Only visible if the reference is not already beneath our solution folder
+                menuCommand.Visible = solutionDir == null || !reference.Path.ToLower().Contains(solutionDir.ToLower());
             }
         }
 

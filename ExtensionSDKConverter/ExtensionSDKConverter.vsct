@@ -75,7 +75,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidConvertSdkToReference</CommandName>
-          <ButtonText>Convert SDK to reference</ButtonText>
+          <ButtonText>Reference Extension SDK locally</ButtonText>
         </Strings>
       </Button>
 
