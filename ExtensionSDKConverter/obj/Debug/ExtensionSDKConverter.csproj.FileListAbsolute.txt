@@ -3,7 +3,6 @@ C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\ExtensionSDKConver
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\ExtensionSDKConverter.pkgdef
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\ExtensionSDKConverter.vsix
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\extension.vsixmanifest
-C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\ExtensionSDKConverter.csprojResolveAssemblyReference.cache
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\ExtensionSDKConverter.csproj.ResolveComReference.cache
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\VSPackage.resources
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\MarkerMetro.ExtensionSDKConverter.Resources.resources
@@ -18,3 +17,6 @@ C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\ExtensionSDKConver
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\ExtensionSDKConverter.pkgdef
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\ExtensionSDKConverter.latest.pkgdef
 C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\obj\Debug\extension.vsixmanifest
+C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\license.txt
+C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\logo-200x200.png
+C:\Code\ExtensionSDKConverter\ExtensionSDKConverter\bin\Debug\logo-32x32.png

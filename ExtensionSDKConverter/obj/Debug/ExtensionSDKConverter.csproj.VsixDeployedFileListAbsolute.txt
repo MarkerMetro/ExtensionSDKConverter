@@ -6,3 +6,8 @@ C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker
 C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\ExtensionSDKConverter.pkgdef
 C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\extension.vsixmanifest
 C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\ExtensionSDKConverter.pdb
+C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\license.txt
+C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\Resources\\logo-200x200.png
+C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\Resources\\logo-32x32.png
+C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\logo-200x200.png
+C:\Users\pete_000\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Marker Metro\Extension SDK Converter\1.0\\logo-32x32.png

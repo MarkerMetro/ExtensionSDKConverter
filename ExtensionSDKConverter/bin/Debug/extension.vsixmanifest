@@ -2,7 +2,13 @@
   <Metadata>
     <Identity Id="8557fba6-e4fa-42a2-9681-de6ed3fe735f" Version="1.0" Language="en-US" Publisher="Marker Metro" />
     <DisplayName>Extension SDK Converter</DisplayName>
-    <Description xml:space="preserve">Convert Extension SDKs normally shipped as VSIX extensions to Visual Studio to assets that can be checked into source control. This allows the projects that use them to compiled on machines that do not have the VSIX extension installed.</Description>
+    <Description xml:space="preserve">Convert Extension SDKs normally shipped as VSIX extensions to Visual Studio to assets that can be checked into source control. This allows the projects that use them to compiled on machines that do not have the VSIX extension installed.
+
+Just right click on an ExtensionSDK reference in solution explorer to convert it.</Description>
+    <License>license.txt</License>
+    <Icon>logo-200x200.png</Icon>
+    <PreviewImage>logo-200x200.png</PreviewImage>
+    <Tags>vsix;extension;sdk;reference;ExtensionSdk</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
