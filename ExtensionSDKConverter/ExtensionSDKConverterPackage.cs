@@ -136,7 +136,7 @@ namespace MarkerMetro.ExtensionSDKConverter
             }
 
             var targetPlatformIdentifier = project.GetProperty("TargetPlatformIdentifier").EvaluatedValue;
-            var targetPlatformVersion = project.GetProperty("TargetPlatformVersion").EvaluatedValue;
+            var targetPlatformVersion = "v" + project.GetProperty("TargetPlatformVersion").EvaluatedValue;
 
             if (!reference.Identity.Contains(","))
             {
@@ -144,7 +144,7 @@ namespace MarkerMetro.ExtensionSDKConverter
             }
 
             var sdkName = reference.Identity.Split(',').First().Trim();
-            var sdkVersion = "v" + reference.Identity.Split(',')
+            var sdkVersion = reference.Identity.Split(',')
                 .Where(s => s.IndexOf("Version=", StringComparison.InvariantCulture) >= 0)
                 .Select(s => s.ToLower().Replace("version=", string.Empty).Trim())
                 .FirstOrDefault();
@@ -344,81 +344,8 @@ namespace MarkerMetro.ExtensionSDKConverter
 
         }
 
-        private SdkInstallationInfo GetSdkInstallationInfo(Reference5 reference)
-        {
-            SdkInstallationInfo installationInfo;
-            return !TryParseFolderStructure(reference, out installationInfo) &&
-                   !TryParseExtensionManifest(reference, out installationInfo)
-                ? null
-                : installationInfo;
-        }
-
-        private bool TryParseExtensionManifest(Reference5 reference, out SdkInstallationInfo installationInfo)
-        {
-            installationInfo = null;
-            if (!Directory.Exists(reference.Path) || !File.Exists(Path.Combine(reference.Path, "extension.vsixmanifest")))
-            {
-                return false;
-            }
-
-            var manifestDoc = XDocument.Load(Path.Combine(reference.Path, "extension.vsixmanifest"));
-            var installationTarget = manifestDoc.Descendants(XName.Get("InstallationTarget", "http://schemas.microsoft.com/developer/vsx-schema/2011")).FirstOrDefault();
-            if (installationTarget == null)
-            {
-                return false;
-            }
-
-            installationInfo = new SdkInstallationInfo
-            {
-                TargetPlatformIdentifier = installationTarget.Attribute("TargetPlatformIdentifier").Value,
-                TargetPlatformVersion = installationTarget.Attribute("TargetPlatformVersion").Value,
-                SdkName = installationTarget.Attribute("SdkName").Value,
-                SdkVersion = installationTarget.Attribute("SdkVersion").Value,
-            };
-            return true;
-        }
-
-        private bool TryParseFolderStructure(Reference5 reference, out SdkInstallationInfo installationInfo)
-        {
-            installationInfo = null;
-            var directories = reference.Path.Split(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(reference.Path) || directories.Length < 6 || !directories.Select(d => d.ToLower()).Contains("extensionsdks"))
-            {
-                return false;
-            }
-
-            // The last 5 paths should be <TargetPlatform>\v<TargetPlatformVersion>\ExtensionSDKs\<SdkName>\<SdkVersion> as per http://msdn.microsoft.com/en-us/library/vstudio/hh768146.aspx#ExtensionSDKs
-
-            directories = directories.Skip(directories.Length - 5).ToArray();
-
-            if (directories[2].ToLower() != "extensionsdks" || !directories[1].ToLower().StartsWith("v"))
-            {
-                return false;
-            }
-
-            installationInfo = new SdkInstallationInfo
-            {
-                TargetPlatformIdentifier = directories[0],
-                TargetPlatformVersion = directories[1],
-                SdkName = directories[3],
-                SdkVersion = directories[4]
-            };
-            
-            return false;
-        }
-
-        private bool TryParseRegistryEntry(Reference5 reference, out SdkInstallationInfo installationInfo)
-        {
-            try
-            {
-                installationInfo = null;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+       
+       
 
 
         private class SdkInstallationInfo
