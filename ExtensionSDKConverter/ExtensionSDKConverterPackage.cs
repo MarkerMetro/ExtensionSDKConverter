@@ -135,12 +135,19 @@ namespace MarkerMetro.ExtensionSDKConverter
                 }
             }
 
-            // Parse the SDKManifest.xml file
-            var manifest = GetSdkManifest(reference);
-            if (manifest == null)
+            var targetPlatformIdentifier = project.GetProperty("TargetPlatformIdentifier").EvaluatedValue;
+            var targetPlatformVersion = project.GetProperty("TargetPlatformVersion").EvaluatedValue;
+
+            if (!reference.Identity.Contains(","))
             {
                 return;
             }
+
+            var sdkName = reference.Identity.Split(',').First().Trim();
+            var sdkVersion = "v" + reference.Identity.Split(',')
+                .Where(s => s.IndexOf("Version=", StringComparison.InvariantCulture) >= 0)
+                .Select(s => s.ToLower().Replace("version=", string.Empty).Trim())
+                .FirstOrDefault();
 
             if (string.IsNullOrEmpty(sdkLibsFolderPath))
             {
@@ -163,12 +170,12 @@ namespace MarkerMetro.ExtensionSDKConverter
             }
 
             // Check if we already have a copy of this SDK
-            var newReferencePath = Path.Combine(sdkLibsFolderPath, manifest.TargetPlatformIdentifier, manifest.TargetPlatformVersion, "ExtensionSDKs", manifest.SdkName, manifest.SdkVersion);
+            var newReferencePath = Path.Combine(sdkLibsFolderPath, targetPlatformIdentifier, targetPlatformVersion, "ExtensionSDKs", sdkName, sdkVersion);
             var sdkOverrideAlreadyContainsPath = hasSdkPathOverride && sdkRootProperty.EvaluatedValue.ToLower().Split(';').Select(s => s.Trim('\\')).Contains(sdkLibsFolderPath.ToLower().Trim('\\'));
 
             if (Directory.Exists(newReferencePath) && sdkOverrideAlreadyContainsPath)
             {
-                ShowInfo(string.Format("The SDK '{0}' Version '{1}' has already been imported into the solution. Solution explorer should show a path local to the solution for this SDK content. If not refresh solution explorer", manifest.SdkName, manifest.SdkVersion));
+                ShowInfo(string.Format("The SDK '{0}' Version '{1}' has already been imported into the solution. Solution explorer should show a path local to the solution for this SDK content. If not refresh solution explorer", sdkName, sdkVersion));
                 return;
             }
 
@@ -337,33 +344,86 @@ namespace MarkerMetro.ExtensionSDKConverter
 
         }
 
-        private SdkInstallationInfo GetSdkManifest(Reference5 reference)
+        private SdkInstallationInfo GetSdkInstallationInfo(Reference5 reference)
         {
+            SdkInstallationInfo installationInfo;
+            return !TryParseFolderStructure(reference, out installationInfo) &&
+                   !TryParseExtensionManifest(reference, out installationInfo)
+                ? null
+                : installationInfo;
+        }
+
+        private bool TryParseExtensionManifest(Reference5 reference, out SdkInstallationInfo installationInfo)
+        {
+            installationInfo = null;
             if (!Directory.Exists(reference.Path) || !File.Exists(Path.Combine(reference.Path, "extension.vsixmanifest")))
             {
-                return null;
+                return false;
             }
 
             var manifestDoc = XDocument.Load(Path.Combine(reference.Path, "extension.vsixmanifest"));
             var installationTarget = manifestDoc.Descendants(XName.Get("InstallationTarget", "http://schemas.microsoft.com/developer/vsx-schema/2011")).FirstOrDefault();
             if (installationTarget == null)
             {
-                return null;
+                return false;
             }
-            
-            return new SdkInstallationInfo
+
+            installationInfo = new SdkInstallationInfo
             {
-                Id = installationTarget.Attribute("Id").Value,
                 TargetPlatformIdentifier = installationTarget.Attribute("TargetPlatformIdentifier").Value,
                 TargetPlatformVersion = installationTarget.Attribute("TargetPlatformVersion").Value,
                 SdkName = installationTarget.Attribute("SdkName").Value,
                 SdkVersion = installationTarget.Attribute("SdkVersion").Value,
             };
+            return true;
         }
+
+        private bool TryParseFolderStructure(Reference5 reference, out SdkInstallationInfo installationInfo)
+        {
+            installationInfo = null;
+            var directories = reference.Path.Split(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(reference.Path) || directories.Length < 6 || !directories.Select(d => d.ToLower()).Contains("extensionsdks"))
+            {
+                return false;
+            }
+
+            // The last 5 paths should be <TargetPlatform>\v<TargetPlatformVersion>\ExtensionSDKs\<SdkName>\<SdkVersion> as per http://msdn.microsoft.com/en-us/library/vstudio/hh768146.aspx#ExtensionSDKs
+
+            directories = directories.Skip(directories.Length - 5).ToArray();
+
+            if (directories[2].ToLower() != "extensionsdks" || !directories[1].ToLower().StartsWith("v"))
+            {
+                return false;
+            }
+
+            installationInfo = new SdkInstallationInfo
+            {
+                TargetPlatformIdentifier = directories[0],
+                TargetPlatformVersion = directories[1],
+                SdkName = directories[3],
+                SdkVersion = directories[4]
+            };
+            
+            return false;
+        }
+
+        private bool TryParseRegistryEntry(Reference5 reference, out SdkInstallationInfo installationInfo)
+        {
+            try
+            {
+                installationInfo = null;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
         private class SdkInstallationInfo
         {
-            public string Id { get; set; }
+            
             public string TargetPlatformIdentifier { get; set; }
             public string TargetPlatformVersion { get; set; }
             public string SdkName { get; set; }

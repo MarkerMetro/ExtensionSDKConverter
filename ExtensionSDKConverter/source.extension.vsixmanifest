@@ -6,6 +6,7 @@
     <Description xml:space="preserve">Converts an Extension SDKs normally shipped as Visual Studio VSIX extensions into local assets that can be checked into source control. This allows the projects that use them to be compiled on machines that do not have the VSIX extension installed.
 
 Just right click on an ExtensionSDK reference in Solution Explorer to reference it locally.</Description>
+    <MoreInfo>https://github.com/MarkerMetro/ExtensionSDKConverter</MoreInfo>
     <License>license.txt</License>
     <Icon>logo-200x200.png</Icon>
     <PreviewImage>logo-200x200.png</PreviewImage>
