@@ -285,12 +285,18 @@ namespace MarkerMetro.ExtensionSDKConverter
 
         private void OnMenuItemQueryStatus(object sender, EventArgs e)
         {
-            OleMenuCommand menuCommand = sender as OleMenuCommand;
-            if (menuCommand != null)
+            var menuCommand = sender as OleMenuCommand;
+
+            if (menuCommand == null)
+            {
+                return;
+            }
+
+            try
             {
                 var reference = GetSelectedReference();
                 var isExtensionSdk = reference != null && reference.RefType == 4;
-                if (!isExtensionSdk)
+                if (!isExtensionSdk || reference.Path == string.Empty || !Directory.Exists(reference.Path))
                 {
                     // Exit early if the reference is not an ExtensionSDK
                     menuCommand.Visible = false;
@@ -302,6 +308,10 @@ namespace MarkerMetro.ExtensionSDKConverter
 
                 // Only visible if the reference is not already beneath our solution folder
                 menuCommand.Visible = solutionDir == null || !reference.Path.ToLower().Contains(solutionDir.ToLower());
+            }
+            catch (Exception)
+            {
+                menuCommand.Visible = false;
             }
         }
 
