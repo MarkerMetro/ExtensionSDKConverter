@@ -14,7 +14,7 @@ The folder needs a particular folder structure and naming convention for the abo
 #Guide
 Follow the step below to use the extension.
 
-1. Install the extension "Reference Extension SDKs locally" from the Visual Studio Gallery.
+1. Install the extension "Reference Extension SDKs locally" from the Visual Studio Gallery. (http://visualstudiogallery.msdn.microsoft.com/1f027247-1e01-4ec6-8f5b-70dabb375217)
 2. In your project, right click on the extension and choose the command of the same name.
 3. You may be prompted for the location to save the SDKs. Choose/create a folder beside your solution file e.g. libs
 4. **Make sure you checkin/commit everything in this folder to your source control repository.** Note that your VCS (e.g. GIT) may be configured to ignore certain path patterns e.g. bin/release/debug so some files in here could get ignored. 
